@@ -311,7 +311,7 @@
         function checkout() {
             if (cart.length === 0) return showToast("سلتك فارغة! أضف منتجات أولاً.");
             let orderText = "أهلاً متجر شادن \nأرغب بطلب التصاميم الرقمية التالية:\n\n", total = 0;
-            cart.forEach(i => { orderText += `▪️ ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
+            cart.forEach(i => { orderText += ` ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
             orderText += `\n الإجمالي: ${total} ريال\n\nيرجى تزويدي بطرق الدفع المتاحة والبيانات المطلوبة للبدء في التنفيذ. وشكراً `;
             window.open(`https://wa.me/966567095886?text=${encodeURIComponent(orderText)}`, '_blank');
             cart = []; saveCart(); updateCartUI(); toggleCart();
