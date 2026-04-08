@@ -17,7 +17,10 @@
         button { cursor: pointer; transition: all 0.3s ease; font-family: 'Tajawal', sans-serif; }
         
         .navbar { background-color: var(--surface); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: background-color 0.3s;}
-        .logo img { height: 60px; object-fit: contain; display: block; }
+        
+        .logo img { height: 70px; object-fit: contain; display: block; mix-blend-mode: multiply; }
+        [data-theme="dark"] .logo img { mix-blend-mode: normal; background-color: #FDFBF7; padding: 5px; border-radius: 10px; }
+
         .nav-controls { display: flex; align-items: center; gap: 20px; }
         .theme-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-dark); }
         .cart-icon-container { position: relative; cursor: pointer; padding: 10px; }
@@ -66,34 +69,38 @@
         .cart-footer { padding: 20px; border-top: 1px solid var(--border); background: var(--surface); }
         .cart-total { display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: var(--text-dark); }
         .btn-checkout { background-color: #25d366; color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: var(--surface); border-right: 5px solid #25d366; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.2); padding: 15px 20px; border-radius: 8px; font-weight: bold; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease forwards, fadeOut 0.5s ease 2.5s forwards; }
 
         /* الفوتر */
         .footer { background-color: var(--footer-bg); color: #ffffff; padding: 50px 5% 20px; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-logo img { height: 80px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
+        .footer-logo img { height: 80px; background: #FDFBF7; padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
         .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
         .footer-col p { color: #cccccc; line-height: 1.6; margin-bottom: 10px; }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: #cccccc; text-decoration: none; transition: 0.3s; }
-        .footer-links a:hover { color: var(--accent); padding-right: 5px;}
+        .footer-links a { color: #cccccc; text-decoration: none; transition: 0.3s; display: inline-block;}
+        .footer-links a:hover { color: var(--accent); transform: translateX(-5px);}
         .social-links { display: flex; gap: 15px; margin-top: 20px; }
         .social-links a { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; background-color: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; transition: 0.3s; }
         .social-links a:hover { background-color: var(--primary); transform: translateY(-3px); }
         .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #999999; font-size: 0.9rem; }
-        
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        @media (max-width: 768px) { .product-details-container { flex-direction: column; } .product-image-side { min-height: 250px; } .product-info-side { padding: 25px; } .product-title { font-size: 2rem; } .actions-group { flex-direction: column; } }
+        @media (max-width: 768px) {
+            .product-details-container { flex-direction: column; }
+            .product-image-side { min-height: 250px; }
+            .product-info-side { padding: 25px; }
+            .product-title { font-size: 2rem; }
+            .actions-group { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+        <a href="index.html" class="logo"><img src="82433.png" alt="متجر شادن"></a>
         <div class="nav-controls">
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn"><i class="fas fa-moon"></i></button>
             <div class="cart-icon-container" onclick="toggleCart()">
@@ -146,7 +153,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <a href="index.html" class="footer-logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+                <a href="index.html" class="footer-logo"><img src="82433.png" alt="متجر شادن"></a>
                 <p>وجهتك الأولى للتصاميم الرقمية الفاخرة والمناسبات السعيدة.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-instagram"></i></a>
@@ -166,7 +173,6 @@
             <div class="footer-col">
                 <h4>تواصل معنا</h4>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> متجر رقمي (خدمة عن بعد)</li>
                     <li><i class="fas fa-envelope" style="color:var(--accent);"></i> info@shaden.com</li>
                     <li><i class="fas fa-phone" style="color:var(--accent);"></i> +966 56 709 5886</li>
                 </ul>
@@ -179,17 +185,33 @@
 
     <script>
         const products = [
-            { id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 150, image: "https://images.unsplash.com/photo-1555252834-8c886ab8b35d?q=80&w=800&auto=format&fit=crop", description: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين." },
-            { id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 100, image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=800&auto=format&fit=crop", description: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب." },
-            { id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 50, image: "https://images.unsplash.com/photo-1544377193-33dce4fc0fa3?q=80&w=800&auto=format&fit=crop", description: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق." },
-            { id: 4, name: "بشارة مولود", category: "بشارات", price: 120, image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=800&auto=format&fit=crop", description: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة." }
+            { 
+                id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 50, 
+                image: "https://images.unsplash.com/photo-1555252834-8c886ab8b35d?q=80&w=800&auto=format&fit=crop",
+                description: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين. تأتي بتصميم عصري وأنيق يضيف أجواءً من الحماس والفرح للمناسبة." 
+            },
+            { 
+                id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 25, 
+                image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=800&auto=format&fit=crop",
+                description: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب ومواقع التواصل لتصل لجميع أحبابك بضغطة زر وبطريقة عصرية وراقية." 
+            },
+            { 
+                id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 15, 
+                image: "https://images.unsplash.com/photo-1544377193-33dce4fc0fa3?q=80&w=800&auto=format&fit=crop",
+                description: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق، مثالية لجميع المناسبات (نجاح، تخرج، عيد ميلاد، ترقية)." 
+            },
+            { 
+                id: 4, name: "بشارة مولود", category: "بشارات", price: 20, 
+                image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=800&auto=format&fit=crop",
+                description: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة لمشاركتها مع من تحب. تشمل إضافة اسم المولود وتاريخ الميلاد." 
+            }
         ];
 
         let cart = JSON.parse(localStorage.getItem('shaden_cart')) || [];
 
         const themeBtn = document.getElementById('theme-btn');
         let isDarkMode = localStorage.getItem('theme') === 'dark';
-        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--text-dark);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
+        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--accent);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
         function toggleTheme() { isDarkMode = !isDarkMode; localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); applyTheme(); }
 
         function loadProductDetails() {
@@ -268,9 +290,17 @@
 
         function checkout() {
             if (cart.length === 0) return showToast("سلتك فارغة! أضف منتجات أولاً.");
-            let orderText = "أهلاً متجر شادن ✨\nأرغب بطلب التصاميم الرقمية التالية:\n\n", total = 0;
-            cart.forEach(i => { orderText += `▪️ ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
-            orderText += `\n💰 الإجمالي: ${total} ريال\n\nيرجى تزويدي بطرق الدفع المتاحة والبيانات المطلوبة للبدء في التنفيذ. وشكراً 🌷`;
+            
+            let orderText = "أهلاً متجر شادن، أرغب بطلب التصاميم التالية:\n\n";
+            let total = 0;
+            
+            cart.forEach(i => { 
+                orderText += `- ${i.name} (الكمية: ${i.quantity})\n`; 
+                total += i.price * i.quantity; 
+            });
+            
+            orderText += `\nالإجمالي: ${total} ريال\n\nالرجاء تزويدي بطرق الدفع والبيانات المطلوبة للبدء في التنفيذ. شكراً لكم.`;
+            
             window.open(`https://wa.me/966567095886?text=${encodeURIComponent(orderText)}`, '_blank');
             cart = []; saveCart(); updateCartUI(); toggleCart();
         }
