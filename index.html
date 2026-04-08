@@ -9,24 +9,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* الألوان الجديدة المستوحاة من شعار شادن */
         :root {
-            --primary: #7A5230;     /* بني ملكي (لون النص) */
-            --secondary: #966740;   /* بني أفتح للتموجات */
-            --accent: #DDA15E;      /* ذهبي/بيج (لون الأغصان) */
-            --bg-color: #FDFBF7;    /* أبيض كريمي دافئ */
+            --primary: #7A5230;     
+            --secondary: #966740;   
+            --accent: #DDA15E;      
+            --bg-color: #FDFBF7;    
             --surface: #ffffff;
-            --text-dark: #3E2723;   /* بني غامق جداً للنصوص */
+            --text-dark: #3E2723;   
             --text-light: #8D6E63;
             --border: #EAE6DF;
-            --footer-bg: #2D1B15;   /* بني ليلي للفوتر */
+            --footer-bg: #2D1B15;   
         }
 
         [data-theme="dark"] {
             --primary: #DDA15E;     
             --secondary: #E6B981;
             --accent: #C49A6C; 
-            --bg-color: #1A1210;    /* خلفية ليلية بنية */
+            --bg-color: #1A1210;    
             --surface: #2C1E1A;
             --text-dark: #F5EFEA;
             --text-light: #BCAAA4;
@@ -36,13 +35,14 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; transition: background-color 0.3s, color 0.3s; display: flex; flex-direction: column; min-height: 100vh;}
-        button { cursor: pointer; transition: all 0.3s ease; }
+        button { cursor: pointer; transition: all 0.3s ease; font-family: 'Tajawal', sans-serif; }
         
         .navbar { background-color: var(--surface); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: background-color 0.3s; }
         
-        /* تعديل الشعار ليصبح صورة */
-        .logo img { height: 60px; object-fit: contain; display: block; }
-        
+        /* إخفاء خلفية الشعار بذكاء */
+        .logo img { height: 70px; object-fit: contain; display: block; mix-blend-mode: multiply; }
+        [data-theme="dark"] .logo img { mix-blend-mode: normal; background-color: #FDFBF7; padding: 5px; border-radius: 10px; }
+
         .search-container { flex: 1; max-width: 400px; margin: 0 20px; position: relative; }
         .search-input { width: 100%; padding: 10px 15px 10px 40px; border-radius: 25px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text-dark); font-size: 1rem; outline: none; transition: 0.3s; }
         .search-input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(122, 82, 48, 0.2); }
@@ -53,7 +53,6 @@
         .cart-icon-container i { font-size: 1.5rem; color: var(--primary); }
         .cart-badge { position: absolute; top: 0; right: 0; background-color: var(--accent); color: #1a1a1a; font-size: 0.8rem; font-weight: bold; height: 22px; width: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-        /* البانر تم تعديل الألوان لتناسب الهوية */
         .hero { background: linear-gradient(rgba(45, 27, 21, 0.8), rgba(122, 82, 48, 0.85)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1920&auto=format&fit=crop') center/cover; color: #ffffff; text-align: center; padding: 120px 20px; }
         .hero h1 { font-size: 3.5rem; margin-bottom: 15px; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .hero p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.95; }
@@ -116,8 +115,7 @@
         .footer { background-color: var(--footer-bg); color: #ffffff; padding: 50px 5% 20px; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
         
-        /* تعديل لوجو الفوتر ليظهر بوضوح */
-        .footer-logo img { height: 80px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
+        .footer-logo img { height: 80px; background: #FDFBF7; padding: 10px; border-radius: 15px; display: block; margin-bottom: 15px; }
         
         .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent); }
         .footer-col p { color: #cccccc; line-height: 1.6; margin-bottom: 10px; }
@@ -149,7 +147,7 @@
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+        <a href="index.html" class="logo"><img src="82433.png" alt="متجر شادن"></a>
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="search-input" class="search-input" placeholder="ابحث عن دعوة، بشارة، أو لعبة..." onkeyup="searchProducts()">
@@ -194,7 +192,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <a href="index.html" class="footer-logo"><img src="5304316830020560732.png" alt="متجر شادن"></a>
+                <a href="#" class="footer-logo"><img src="82433.png" alt="متجر شادن"></a>
                 <p>وجهتك الأولى للتصاميم الرقمية الفاخرة والمناسبات السعيدة.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-instagram"></i></a>
@@ -240,11 +238,28 @@
     <div id="toast-container"></div>
 
     <script>
+        // المنتجات الجديدة المخصصة لمتجرك مع الأوصاف لصفحة المنتج والأسعار المحدثة
         const products = [
-            { id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 150, image: "https://images.unsplash.com/photo-1555252834-8c886ab8b35d?q=80&w=800&auto=format&fit=crop", description: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين." },
-            { id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 100, image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=800&auto=format&fit=crop", description: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب." },
-            { id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 50, image: "https://images.unsplash.com/photo-1544377193-33dce4fc0fa3?q=80&w=800&auto=format&fit=crop", description: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق." },
-            { id: 4, name: "بشارة مولود", category: "بشارات", price: 120, image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=800&auto=format&fit=crop", description: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة." }
+            { 
+                id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 50, 
+                image: "https://images.unsplash.com/photo-1555252834-8c886ab8b35d?q=80&w=800&auto=format&fit=crop",
+                description: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين. تأتي بتصميم عصري وأنيق يضيف أجواءً من الحماس والفرح للمناسبة." 
+            },
+            { 
+                id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 25, 
+                image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=800&auto=format&fit=crop",
+                description: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب ومواقع التواصل لتصل لجميع أحبابك بضغطة زر وبطريقة عصرية وراقية." 
+            },
+            { 
+                id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 15, 
+                image: "https://images.unsplash.com/photo-1544377193-33dce4fc0fa3?q=80&w=800&auto=format&fit=crop",
+                description: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق، مثالية لجميع المناسبات (نجاح، تخرج، عيد ميلاد، ترقية)." 
+            },
+            { 
+                id: 4, name: "بشارة مولود", category: "بشارات", price: 20, 
+                image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=800&auto=format&fit=crop",
+                description: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة لمشاركتها مع من تحب. تشمل إضافة اسم المولود وتاريخ الميلاد." 
+            }
         ];
 
         let cart = JSON.parse(localStorage.getItem('shaden_cart')) || [];
@@ -252,16 +267,20 @@
 
         const themeBtn = document.getElementById('theme-btn');
         let isDarkMode = localStorage.getItem('theme') === 'dark';
-        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--text-dark);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
+        function applyTheme() { if(isDarkMode) { document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = '<i class="fas fa-sun" style="color:var(--accent);"></i>'; } else { document.body.removeAttribute('data-theme'); themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; } }
         function toggleTheme() { isDarkMode = !isDarkMode; localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); applyTheme(); }
 
-        function viewProduct(id) { window.location.href = `product.html?id=${id}`; }
+        function viewProduct(id) {
+            window.location.href = `product.html?id=${id}`;
+        }
 
         function renderProducts(itemsToRender = null) {
             const grid = document.getElementById('products-grid');
             const noResults = document.getElementById('no-results');
             grid.innerHTML = '';
+            
             let finalProducts = itemsToRender || (currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter));
+
             if (finalProducts.length === 0) { noResults.style.display = 'block'; } 
             else {
                 noResults.style.display = 'none';
@@ -275,9 +294,12 @@
                             <div class="product-info">
                                 <h3 class="product-title" onclick="viewProduct(${product.id})">${product.name}</h3>
                                 <div class="product-price">${product.price} ريال</div>
-                                <button class="btn-add" onclick="addToCart(${product.id})"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                                <button class="btn-add" onclick="addToCart(${product.id})">
+                                    <i class="fas fa-cart-plus"></i> أضف للسلة
+                                </button>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                     grid.innerHTML += card;
                 });
             }
@@ -309,6 +331,7 @@
             const container = document.getElementById('cart-items');
             document.getElementById('cart-badge').innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
             let total = 0;
+
             if (cart.length === 0) {
                 container.innerHTML = '<div class="empty-cart-msg" style="display: block;">سلتك فارغة حالياً 💔</div>';
             } else {
@@ -335,7 +358,10 @@
             document.getElementById('cart-total-price').innerText = `${total} ريال`;
         }
 
-        function changeQty(id, change) { const item = cart.find(i => i.id === id); if (item) { item.quantity += change; if (item.quantity <= 0) removeFromCart(id); else { saveCart(); updateCartUI(); } } }
+        function changeQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) { item.quantity += change; if (item.quantity <= 0) removeFromCart(id); else { saveCart(); updateCartUI(); } }
+        }
         function removeFromCart(id) { cart = cart.filter(i => i.id !== id); saveCart(); updateCartUI(); }
         function toggleCart() { document.getElementById('cart-drawer').classList.toggle('active'); document.getElementById('cart-overlay').classList.toggle('active'); }
         function showToast(msg) {
@@ -344,11 +370,20 @@
             cont.appendChild(toast); setTimeout(() => toast.remove(), 3000);
         }
 
+        // تم إصلاح وتعديل رسالة الواتساب لتعمل بشكل سليم بدون رموز تسبب مشاكل
         function checkout() {
             if (cart.length === 0) return showToast("سلتك فارغة! أضف منتجات أولاً.");
-            let orderText = "أهلاً متجر شادن ✨\nأرغب بطلب التصاميم الرقمية التالية:\n\n", total = 0;
-            cart.forEach(i => { orderText += `▪️ ${i.name} (الكمية: ${i.quantity})\n`; total += i.price * i.quantity; });
-            orderText += `\n💰 الإجمالي: ${total} ريال\n\nيرجى تزويدي بطرق الدفع المتاحة والبيانات المطلوبة للبدء في التنفيذ. وشكراً 🌷`;
+            
+            let orderText = "أهلاً متجر شادن، أرغب بطلب التصاميم التالية:\n\n";
+            let total = 0;
+            
+            cart.forEach(i => { 
+                orderText += `- ${i.name} (الكمية: ${i.quantity})\n`; 
+                total += i.price * i.quantity; 
+            });
+            
+            orderText += `\nالإجمالي: ${total} ريال\n\nالرجاء تزويدي بطرق الدفع والبيانات المطلوبة للبدء في التنفيذ. شكراً لكم.`;
+            
             window.open(`https://wa.me/966567095886?text=${encodeURIComponent(orderText)}`, '_blank');
             cart = []; saveCart(); updateCartUI(); toggleCart();
         }
