@@ -100,6 +100,12 @@
         .actions-group { display: flex; gap: 15px; }
         .btn-back { background-color: var(--surface); color: var(--text-dark); border: 2px solid var(--border); padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; cursor: pointer; text-align: center;}
 
+        /* نافذة الخيارات المنبثقة (Modal) للرئيسية */
+        .options-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: var(--surface); z-index: 1001; width: 90%; max-width: 400px; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transition: 0.3s; border: 1px solid var(--border); }
+        .options-modal.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;}
+        .modal-header h3 { margin: 0; color: var(--text-dark); font-size: 1.3rem; }
+
         /* الصفحات المعلوماتية */
         .info-card { background-color: var(--surface); max-width: 800px; width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 50px; border: 1px solid var(--border); position: relative; overflow: hidden; margin: 0 auto; }
         .info-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
@@ -155,6 +161,19 @@
             </div>
         </div>
     </nav>
+
+    <div class="cart-overlay" id="options-modal-overlay" onclick="closeOptionsModal()" style="z-index: 1000;"></div>
+    <div class="options-modal" id="options-modal">
+        <div class="modal-header">
+            <h3 id="modal-product-name">اسم المنتج</h3>
+            <i class="fas fa-times" onclick="closeOptionsModal()" style="cursor:pointer; font-size:1.5rem; color:var(--text-light)"></i>
+        </div>
+        <div class="modal-body">
+            <label style="font-weight: bold; margin-bottom: 10px; display: block; color: var(--primary);">اختر الباقة المناسبة:</label>
+            <select id="modal-options-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text-dark); font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: bold; outline: none; margin-bottom: 20px;"></select>
+            <button class="btn-add" onclick="addOptionToCartFromModal()"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+        </div>
+    </div>
 
     <div id="home-section" class="page-section active">
         <header class="hero">
@@ -259,7 +278,7 @@
             <i class="fas fa-undo-alt info-icon"></i>
             <h1 class="info-title">سياسة الاسترجاع</h1>
             <div class="policy-alert">
-                <i class="fas fa-exclamation-triangle"></i> تنويه هام: نظراً لأن منتجاتنا رقمية وتُصمم أو تبرمج خصيصاً للعميل، فإنه يُعتذر استرجاع المبلغ بعد البدء في التنفيذ.
+                <i class="fas fa-exclamation-triangle"></i> تنويه هام: نظراً لأن منتجاتنا رقمية (دعوات، بشارات، متاجر) وتُصمم خصيصاً للعميل، فإنه يُعتذر استرجاع المبلغ بعد البدء في التنفيذ.
             </div>
             <div class="vision-mission">
                 <div class="box"><i class="fas fa-times-circle" style="font-size: 2rem; color: var(--accent); margin-bottom: 10px;"></i><h3>الإلغاء قبل التنفيذ</h3><p>يُسمح باسترجاع المبلغ بالكامل في حال طلب العميل الإلغاء قبل بدء العمل.</p></div>
@@ -272,7 +291,7 @@
         <div style="text-align: center;">
             <div class="footer-logo-wrap" onclick="navigateTo('home')" style="cursor: pointer;"><img src="82433.png"></div>
             <p>متجر شادن - جمال وأناقة للمناسبات والتصاميم الرقمية</p>
-            <ul class="footer-links">
+            <ul class="footer-links" style="justify-content: center;">
                 <li><a onclick="navigateTo('about')">من نحن</a></li>
                 <li><a onclick="navigateTo('privacy')">الخصوصية</a></li>
                 <li><a onclick="navigateTo('terms')">الشروط</a></li>
@@ -305,19 +324,19 @@
     <div id="toast-container"></div>
 
     <script>
-        // قاعدة بيانات المنتجات مع المنتج الجديد وباقاته
+        // قاعدة البيانات
         const products = [
             { 
                 id: 5, 
                 name: "إنشاء متجر إلكتروني", 
                 category: "متاجر", 
                 price: 250, 
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop", 
+                image: "82459.jpg", 
                 desc: "خدمة متكاملة لإنشاء وتصميم متجرك الإلكتروني بأحدث التقنيات لتبدأ تجارتك فوراً.",
                 hasOptions: true,
                 options: [
-                    { id: "opt1", name: "تصميم وإنشاء أساسي", price: 250 },
-                    { id: "opt2", name: "موقع وتصميم احترافي", price: 400 }
+                    { id: "opt1", name: "متجر إلكتروني مع التصميم والإنشاء", price: 250 },
+                    { id: "opt2", name: "موقع متجر إلكتروني مع التصميم والإنشاء - احترافي", price: 400 }
                 ]
             },
             { id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 50, image: "https://images.unsplash.com/photo-1555252834-8c886ab8b35d?q=80&w=800&auto=format&fit=crop", desc: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين." },
@@ -329,12 +348,10 @@
         let cart = JSON.parse(localStorage.getItem('shaden_cart')) || [];
         let currentFilter = 'all';
         let currentProduct = null;
+        let currentModalProductId = null;
 
-        // نظام التنقل بداخل الصفحة (Single Page App)
         function navigateTo(pageId, productId = null) {
-            // إخفاء جميع الأقسام
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-            // إظهار القسم المطلوب
             document.getElementById(pageId + '-section').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -350,7 +367,6 @@
                     const optContainer = document.getElementById('det-options-container');
                     const optSelect = document.getElementById('det-options');
 
-                    // التحقق مما إذا كان المنتج يحتوي على باقات
                     if (p.hasOptions) {
                         optContainer.style.display = 'block';
                         optSelect.innerHTML = p.options.map((opt, index) => `<option value="${index}">${opt.name} - ${opt.price} ريال</option>`).join('');
@@ -365,7 +381,6 @@
             }
         }
 
-        // تحديث السعر عند تغيير الباقة من القائمة المنسدلة
         function updatePrice() {
             if (currentProduct && currentProduct.hasOptions) {
                 const selectedIndex = document.getElementById('det-options').value;
@@ -373,10 +388,7 @@
             }
         }
 
-        function searchAndGoHome() {
-            navigateTo('home');
-            searchProducts();
-        }
+        function searchAndGoHome() { navigateTo('home'); searchProducts(); }
 
         function applyTheme() {
             let isDark = localStorage.getItem('theme') === 'dark';
@@ -396,9 +408,8 @@
             grid.innerHTML = '';
             let final = list || (currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter));
             final.forEach(p => {
-                // إذا كان للمنتج خيارات متعددة نكتب "اختيار الباقة" بدلاً من "أضف للسلة"
                 let btnText = p.hasOptions ? "اختيار الباقة" : "أضف للسلة";
-                let btnAction = p.hasOptions ? `MapsTo('product', ${p.id})` : `addToCart(${p.id})`;
+                let btnAction = p.hasOptions ? `openOptionsModal(${p.id})` : `addToCart(${p.id})`;
 
                 grid.innerHTML += `
                     <div class="product-card">
@@ -426,21 +437,55 @@
             renderProducts(products.filter(p => p.name.toLowerCase().includes(term)));
         }
 
-        // إضافة منتج مباشر (بدون خيارات) من الصفحة الرئيسية
+        // دوال النافذة المنبثقة للباقات (للرئيسية)
+        function openOptionsModal(pid) {
+            const p = products.find(x => x.id === pid);
+            if(!p || !p.hasOptions) return;
+            currentModalProductId = pid;
+            document.getElementById('modal-product-name').innerText = p.name;
+            const select = document.getElementById('modal-options-select');
+            select.innerHTML = p.options.map((opt, index) => `<option value="${index}">${opt.name} - ${opt.price} ريال</option>`).join('');
+            document.getElementById('options-modal-overlay').classList.add('active');
+            document.getElementById('options-modal').classList.add('active');
+        }
+
+        function closeOptionsModal() {
+            document.getElementById('options-modal-overlay').classList.remove('active');
+            document.getElementById('options-modal').classList.remove('active');
+        }
+
+        function addOptionToCartFromModal() {
+            if(!currentModalProductId) return;
+            const p = products.find(x => x.id === currentModalProductId);
+            const selectedIndex = document.getElementById('modal-options-select').value;
+            const opt = p.options[selectedIndex];
+
+            let finalProduct = { ...p };
+            finalProduct.price = opt.price;
+            finalProduct.name = p.name + " (" + opt.name + ")";
+            finalProduct.id = p.id + "_" + selectedIndex;
+
+            const ex = cart.find(x => x.id === finalProduct.id);
+            if(ex) ex.quantity++; else cart.push({...finalProduct, quantity: 1});
+
+            localStorage.setItem('shaden_cart', JSON.stringify(cart));
+            updateCartUI();
+            closeOptionsModal();
+            showToast("تمت الإضافة ✨");
+        }
+
+        // الإضافة المباشرة
         function addToCart(pid) {
             const p = products.find(x => x.id === pid);
-            if (p.hasOptions) { navigateTo('product', pid); return; }
-
             const ex = cart.find(x => x.id === pid);
             if(ex) ex.quantity++; else cart.push({...p, quantity: 1});
             localStorage.setItem('shaden_cart', JSON.stringify(cart));
             updateCartUI(); showToast("تمت الإضافة ✨");
         }
 
-        // إضافة منتج من صفحة التفاصيل (يدعم الباقات المتعددة)
+        // الإضافة من صفحة التفاصيل
         function addToCartFromDetails() {
             if (!currentProduct) return;
-            
             let finalProduct = { ...currentProduct };
 
             if (currentProduct.hasOptions) {
@@ -448,14 +493,13 @@
                 const selectedOption = currentProduct.options[selectedIndex];
                 finalProduct.price = selectedOption.price;
                 finalProduct.name = currentProduct.name + " (" + selectedOption.name + ")";
-                finalProduct.id = currentProduct.id + "_" + selectedIndex; // معرّف مميز لكل باقة
+                finalProduct.id = currentProduct.id + "_" + selectedIndex;
             }
 
             const ex = cart.find(x => x.id === finalProduct.id);
             if(ex) ex.quantity++; else cart.push({...finalProduct, quantity: 1});
             localStorage.setItem('shaden_cart', JSON.stringify(cart));
-            updateCartUI();
-            showToast("تمت الإضافة ✨");
+            updateCartUI(); showToast("تمت الإضافة ✨");
         }
 
         function updateCartUI() {
@@ -482,7 +526,6 @@
             document.getElementById('cart-total-price').innerText = total + " ريال";
         }
 
-        // تم التعديل لتمرير الـ ID كنص (لأن منتجات الباقات تحمل id نصي مثل 5_0)
         function changeQty(id, n) {
             const i = cart.find(x => x.id == id);
             if(i) { i.quantity += n; if(i.quantity <= 0) cart = cart.filter(x => x.id != id); localStorage.setItem('shaden_cart', JSON.stringify(cart)); updateCartUI(); }
@@ -498,7 +541,6 @@
             setTimeout(() => t.remove(), 3000); 
         }
 
-        // رسالة الواتساب بدون أيموجي معقد وبصيغة نصية مرتبة جداً
         function checkout() {
             if (cart.length === 0) { showToast("السلة فارغة!"); return; }
             let msg = "أهلا متجر شادن، أرغب بطلب التصاميم التالية:\n\n";
@@ -513,4 +555,3 @@
     </script>
 </body>
 </html>
- 
