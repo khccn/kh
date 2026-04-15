@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهنئة العيد بإسمك مجانا | متجر شادن ✨</title>
+    <title>تهنئة العيد مجانًا | متجر شادن ✨</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,32 +26,47 @@
         .simple-header { background-color: var(--surface); width: 100%; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 2px solid var(--accent);}
         .simple-header img { height: 60px; object-fit: contain; }
 
-        .generator-container { background: var(--surface); max-width: 600px; width: 90%; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); }
+        .generator-container { background: var(--surface); max-width: 600px; width: 95%; margin: 30px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid var(--border); position: relative;}
         .generator-title { font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; font-weight: 900; }
         
         /* قسم اختيار التصميم */
-        .template-selector { display: flex; gap: 15px; justify-content: center; margin: 25px 0; }
-        .template-option { flex: 1; cursor: pointer; border: 3px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; max-width: 150px; }
-        .template-option img { width: 100%; height: auto; display: block; opacity: 0.7; }
+        .template-selector { display: flex; gap: 15px; justify-content: center; margin: 20px 0; }
+        .template-option { flex: 1; cursor: pointer; border: 3px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; max-width: 140px; }
+        .template-option img { width: 100%; height: auto; display: block; opacity: 0.6; }
         .template-option.active { border-color: var(--primary); transform: scale(1.05); box-shadow: 0 5px 15px rgba(122, 82, 48, 0.2); }
         .template-option.active img { opacity: 1; }
-        .template-label { display: block; padding: 5px; font-size: 0.8rem; background: var(--border); font-weight: bold; }
+        .template-label { display: block; padding: 5px; font-size: 0.75rem; background: var(--border); font-weight: bold; }
         .template-option.active .template-label { background: var(--primary); color: white; }
 
         .input-group { margin-bottom: 20px; text-align: right; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-dark); }
-        .name-input { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.1rem; font-family: 'Tajawal', sans-serif; outline: none; transition: 0.3s; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-dark); font-size: 0.9rem;}
+        .name-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.1rem; font-family: 'Tajawal', sans-serif; outline: none; transition: 0.3s; text-align: center;}
         .name-input:focus { border-color: var(--primary); }
 
-        .btn-generate { background-color: var(--primary); color: #ffffff; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-generate:hover { background-color: var(--secondary); transform: translateY(-3px); }
+        .btn-generate { background-color: var(--primary); color: #ffffff; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 25px;}
+        .btn-generate:hover { background-color: var(--secondary); transform: translateY(-2px); }
 
-        .promo-section { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 100%; padding: 50px 20px; text-align: center; color: white; margin-top: auto; }
-        .promo-title { font-size: 2rem; margin-bottom: 15px; font-weight: 900; }
-        .promo-text { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;}
-        .btn-store { display: inline-block; background-color: var(--accent); color: #1a1a1a; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: 900; font-size: 1.2rem; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        /* === شريط الخدمات السريع الجديد === */
+        .quick-services-bar { border-top: 2px dashed var(--border); padding-top: 25px; margin-top: 10px; }
+        .quick-services-title { font-size: 1rem; font-weight: 800; color: var(--secondary); margin-bottom: 15px; display: block; }
+        .services-icons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .service-icon-item { text-decoration: none; color: var(--text-dark); display: flex; flex-direction: column; align-items: center; gap: 5px; transition: 0.3s; }
+        .service-icon-item:hover { transform: translateY(-5px); color: var(--primary); }
+        .icon-circle { width: 50px; height: 50px; background: var(--bg-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--primary); border: 1px solid var(--border); transition: 0.3s;}
+        .service-icon-item:hover .icon-circle { background: var(--primary); color: white; border-color: var(--primary); }
+        .service-label { font-size: 0.7rem; font-weight: bold; }
+
+        .promo-section { background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 100%; padding: 40px 20px; text-align: center; color: white; margin-top: auto; }
+        .promo-title { font-size: 1.8rem; margin-bottom: 10px; font-weight: 900; }
+        .promo-text { font-size: 1rem; margin-bottom: 25px; opacity: 0.9; max-width: 600px; margin: 0 auto 25px auto; line-height: 1.6;}
+        .btn-store { display: inline-block; background-color: var(--accent); color: #1a1a1a; text-decoration: none; padding: 12px 35px; border-radius: 30px; font-weight: 900; font-size: 1.1rem; transition: 0.3s; }
         
         canvas { display: none; }
+
+        @media (max-width: 480px) {
+            .services-icons-grid { grid-template-columns: repeat(4, 1fr); }
+            .generator-title { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -62,36 +77,57 @@
 
     <div class="generator-container">
         <h1 class="generator-title">اصنع بطاقتك الآن ✨</h1>
-        <p style="color: #666;">اختر التصميم المفضل واكتب اسمك لتحميل البطاقة</p>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">اكتب اسمك وحمل بطاقتك المجانية فوراً</p>
         
         <div class="template-selector">
             <div class="template-option active" onclick="selectTemplate(1, this)">
-                <img src="test1.png" alt="التصميم الأول">
+                <img src="test1.png" alt="التصميم 1">
                 <span class="template-label">التصميم 1</span>
             </div>
             <div class="template-option" onclick="selectTemplate(2, this)">
-                <img src="test2.png" alt="التصميم الثاني">
+                <img src="test2.png" alt="التصميم 2">
                 <span class="template-label">التصميم 2</span>
             </div>
         </div>
 
         <div class="input-group">
-            <label for="userName">الاسم المراد كتابته:</label>
             <input type="text" id="userName" class="name-input" placeholder="اكتب اسمك هنا..." maxlength="25">
         </div>
 
         <button class="btn-generate" onclick="generateAndDownload()">
-            <i class="fas fa-download"></i> تحميل البطاقة مجاناً
+            <i class="fas fa-download"></i> تحميل البطاقة
         </button>
 
-        <canvas id="cardCanvas"></canvas>
+        <div class="quick-services-bar">
+            <span class="quick-services-title">اكتشف خدمات متجر شادن 🦌</span>
+            <div class="services-icons-grid">
+                <a href="https://shadendesign.com" class="service-icon-item">
+                    <div class="icon-circle"><i class="fas fa-store"></i></div>
+                    <span class="service-label">متاجر</span>
+                </a>
+                <a href="https://shadendesign.com" class="service-icon-item">
+                    <div class="icon-circle"><i class="fas fa-file-invoice"></i></div>
+                    <span class="service-label">CV</span>
+                </a>
+                <a href="https://shadendesign.com" class="service-icon-item">
+                    <div class="icon-circle"><i class="fas fa-ghost"></i></div>
+                    <span class="service-label">فلاتر</span>
+                </a>
+                <a href="https://shadendesign.com" class="service-icon-item">
+                    <div class="icon-circle"><i class="fas fa-envelope-open-text"></i></div>
+                    <span class="service-label">دعوات</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="promo-section">
-        <h2 class="promo-title">هل تبحث عن تصميم يخلّد مناسبتك؟ 🎨</h2>
-        <p class="promo-text">في متجر شادن، نصمم لك دعوات الزواج الإلكترونية، فلاتر السناب شات، والمتاجر..وغيرها باحترافية تسعد قلبك!</p>
-        <a href="https://shadendesign.com" class="btn-store"><i class="fas fa-shopping-cart" style="margin-left: 8px;"></i> تصفح خدمات متجر شادن</a>
+        <h2 class="promo-title">تصاميم تخلّد ذكرياتكم 🎨</h2>
+        <p class="promo-text">نحن هنا لنجعل مناسباتكم أكثر أناقة واحترافية بمجموعة واسعة من الخدمات الرقمية.</p>
+        <a href="https://shadendesign.com" class="btn-store"><i class="fas fa-external-link-alt" style="margin-left: 8px;"></i> انتقل لمتجر شادن الرئيسي</a>
     </div>
+
+    <canvas id="cardCanvas"></canvas>
 
     <script>
         let selectedTemplate = 1;
@@ -114,7 +150,6 @@
             const img = new Image();
             img.crossOrigin = "Anonymous"; 
             
-            // اختيار ملف الصورة بناءً على الاختيار
             img.src = selectedTemplate === 1 ? 'test1.png' : 'test2.png'; 
 
             img.onload = () => {
@@ -122,23 +157,15 @@
                 canvas.height = img.height;
                 ctx.drawImage(img, 0, 0);
 
-                // --- إعدادات الخط (تأكد أن الأرقام هنا هي ما تفضله) ---
-                const fontSize = "55px"; // يمكنك تغيير حجم الخط من هنا مباشرة
+                const fontSize = "55px"; 
                 ctx.font = `bold ${fontSize} 'Tajawal'`; 
                 ctx.fillStyle = "#7A5230"; 
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                // تحديد مكان النص بناءً على التصميم المختار
-                let yPosition;
-                
-                if(selectedTemplate === 1) {
-                    yPosition = canvas.height / 2 + 300; // ارتفاع النص للتصميم الأول
-                } else {
-                    yPosition = canvas.height / 2 + 200; // ارتفاع النص للتصميم الثاني
-                }
+                let yPosition = canvas.height / 2 + 300; 
+                if(selectedTemplate === 2) { yPosition = canvas.height / 2 + 200; }
 
-                // رسم النص
                 ctx.fillText(name, canvas.width / 2, yPosition);
 
                 const link = document.createElement('a');
