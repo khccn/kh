@@ -122,20 +122,23 @@
                 canvas.height = img.height;
                 ctx.drawImage(img, 0, 0);
 
-                // إعدادات النص
-                ctx.font = "bold 60px 'Tajawal'"; 
+                // --- إعدادات الخط (تأكد أن الأرقام هنا هي ما تفضله) ---
+                const fontSize = "55px"; // يمكنك تغيير حجم الخط من هنا مباشرة
+                ctx.font = `bold ${fontSize} 'Tajawal'`; 
                 ctx.fillStyle = "#7A5230"; 
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
-                // توزيع النص: يمكنك تغيير هذه القيم لكل تصميم إذا أردت
-                let yPosition = canvas.height / 2 + 350; 
+                // تحديد مكان النص بناءً على التصميم المختار
+                let yPosition;
                 
-                // مثال: إذا كان التصميم الثاني يحتاج مكان مختلف للاسم
-                if(selectedTemplate === 2) {
-                    yPosition = canvas.height / 2 + 250; 
+                if(selectedTemplate === 1) {
+                    yPosition = canvas.height / 2 + 150; // ارتفاع النص للتصميم الأول
+                } else {
+                    yPosition = canvas.height / 2 + 200; // ارتفاع النص للتصميم الثاني
                 }
 
+                // رسم النص
                 ctx.fillText(name, canvas.width / 2, yPosition);
 
                 const link = document.createElement('a');
