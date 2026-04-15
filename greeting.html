@@ -66,11 +66,11 @@
         
         <div class="template-selector">
             <div class="template-option active" onclick="selectTemplate(1, this)">
-                <img src="template1.jpg" alt="التصميم الأول">
+                <img src="test1.png" alt="التصميم الأول">
                 <span class="template-label">التصميم 1</span>
             </div>
             <div class="template-option" onclick="selectTemplate(2, this)">
-                <img src="template2.jpg" alt="التصميم الثاني">
+                <img src="test2.png" alt="التصميم الثاني">
                 <span class="template-label">التصميم 2</span>
             </div>
         </div>
@@ -115,7 +115,7 @@
             img.crossOrigin = "Anonymous"; 
             
             // اختيار ملف الصورة بناءً على الاختيار
-            img.src = selectedTemplate === 1 ? 'template1.jpg' : 'template2.jpg'; 
+            img.src = selectedTemplate === 1 ? 'test1.png' : 'test2.png'; 
 
             img.onload = () => {
                 canvas.width = img.width;
