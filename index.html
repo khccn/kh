@@ -188,7 +188,7 @@
 
     <nav class="navbar">
         <div class="logo-container" onclick="navigateTo('home')">
-            <img src="82433.png" alt="بيور">
+            <img src="82433.png" alt="بيور"> id="main-logo">
         </div>
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
@@ -501,8 +501,20 @@
         function applyTheme() {
             let isDark = localStorage.getItem('theme') === 'dark';
             const icon = document.getElementById('theme-icon');
-            if(isDark) { document.body.setAttribute('data-theme', 'dark'); icon.className = "fas fa-sun"; icon.style.color = "var(--accent)"; }
-            else { document.body.removeAttribute('data-theme'); icon.className = "fas fa-moon"; icon.style.color = ""; }
+            const logo = document.getElementById('main-logo'); // الإمساك بالشعار
+    
+            if(isDark) { 
+                document.body.setAttribute('data-theme', 'dark'); 
+                icon.className = "fas fa-sun"; 
+                icon.style.color = "var(--accent)";
+                if(logo) logo.src = "82433dark.png"; // الشعار الليلي الذي رفعته
+            }
+            else { 
+                document.body.removeAttribute('data-theme'); 
+                icon.className = "fas fa-moon"; 
+                icon.style.color = ""; 
+                if(logo) logo.src = "82433.png"; // الشعار النهاري الأصلي
+            }
         }
 
         function toggleTheme() {
