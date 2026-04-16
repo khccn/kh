@@ -197,10 +197,14 @@
                 <td><small>${o.createdAt?.toDate().toLocaleString('ar-SA') || 'جديد'}</small></td>
                 <td><button style="border:none; background:none; color:var(--blue); cursor:pointer; font-weight:bold" onclick="viewOrderDetails('${o.docId}')">#${o.orderNumber || o.docId.substring(0,5)}</button></td>
                 <td style="color:var(--success)"><b>${o.total}</b></td>
-                <td>
+                <td style="white-space: nowrap;">
                     <span class="status-badge ${o.status === 'مكتمل' ? 'status-done' : 'status-new'}">${o.status || 'جديد'}</span>
-                    <button class="btn-circle" style="background:var(--success)" onclick="updateStatus('${o.docId}', 'مكتمل')"><i class="fas fa-check"></i></button>
-                    <button class="btn-circle" style="background:var(--danger)" onclick="deleteOrder('${o.docId}')"><i class="fas fa-trash"></i></button>
+                    
+                    <button class="btn-circle" style="background:var(--success)" title="تم التنفيذ" onclick="updateStatus('${o.docId}', 'مكتمل')"><i class="fas fa-check"></i></button>
+                    
+                    <button class="btn-circle" style="background:var(--warning)" title="تراجع (إعادة لجديد)" onclick="updateStatus('${o.docId}', 'جديد')"><i class="fas fa-times"></i></button>
+                    
+                    <button class="btn-circle" style="background:var(--danger)" title="حذف الطلب" onclick="deleteOrder('${o.docId}')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         `).join('');
