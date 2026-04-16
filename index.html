@@ -426,26 +426,26 @@
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, "products"));
                 products = [];
-                let categoriesSet = new Set(); // 🌟 لتخزين أسماء الأقسام بدون تكرار
+                let categoriesSet = new Set(); 
 
                 querySnapshot.forEach((doc) => {
                     let data = doc.data();
-                    // تأمين الـ ID ليعمل بشكل سليم دائماً
+                    
+                    // 🌟 هذا هو السطر السحري الذي سيخفي المنتج من الموقع!
+                    if (data.isHidden === true) return; 
+
                     data.id = data.id ? data.id : doc.id; 
                     products.push(data);
                     
-                    // إضافة القسم للقائمة الذكية
                     if(data.category) { categoriesSet.add(data.category); }
                 });
                 
                 console.log("تم تحميل " + products.length + " منتجات بنجاح ✨");
-                
-                updateCategoryButtons(Array.from(categoriesSet)); // 🌟 بناء أزرار الأقسام ديناميكياً
+                updateCategoryButtons(Array.from(categoriesSet)); 
                 renderProducts(); 
                 
             } catch (e) {
                 console.error("خطأ في جلب البيانات: ", e);
-                document.getElementById('products-grid').innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 50px;">عذراً، جاري تحديث المنتجات.. يرجى المحاولة بعد قليل.</p>';
             }
         }
 
