@@ -391,6 +391,34 @@
     <a href="https://wa.me/966548774184" target="_blank" class="floating-whatsapp"><i class="fab fa-whatsapp"></i></a>
     <div id="toast-container"></div>
 
+    <script type="module">
+        // 1. استدعاء مكتبات Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // 2. تهيئة الاتصال باستخدام المفاتيح التي أرسلتها
+        const firebaseConfig = {
+            apiKey: "AIzaSyArRTcygI2dadObLCWPSVxOfC3gkBjyHHo",
+            authDomain: "pure-design-de0f7.firebaseapp.com",
+            projectId: "pure-design-de0f7",
+            storageBucket: "pure-design-de0f7.firebasestorage.app",
+            messagingSenderId: "647657577378",
+            appId: "1:647657577378:web:6d192aa609c921c16db0fb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // جعل المتغيرات متاحة لباقي ملفات JavaScript
+        window.db = db;
+        window.collection = collection;
+        window.getDocs = getDocs;
+
+        console.log("Firebase تم التهيئة بنجاح! المتجر متصل بقاعدة البيانات.");
+        
+        // سنضيف كود جلب المنتجات هنا في الخطوة القادمة
+    </script>
+
     <script>
         // قاعدة البيانات المحدثة بالخدمات الجديدة 
         const products = [
@@ -679,3 +707,5 @@
     </script>
 </body>
 </html>
+}
+مافهمت، وش اللي انسخه واستبدله بـ ايش ؟ بالملف اللي ارسلته لك هنا ؟
