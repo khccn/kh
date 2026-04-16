@@ -418,25 +418,48 @@
     </script>
 
     <script>
-        // --- الربط مع قاعدة البيانات ---
-        let products = []; // سنبدأ بقائمة فارغة ونملأها من جوجل
+        // --- الربط الذكي مع قاعدة البيانات ---
+        let products = []; 
 
         async function fetchProductsFromFirebase() {
-            console.log("جاري جلب المنتجات من جوجل...");
+            console.log("جاري جلب المنتجات...");
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.db, "products"));
                 products = [];
+                let categoriesSet = new Set(); // 🌟 لتخزين أسماء الأقسام بدون تكرار
+
                 querySnapshot.forEach((doc) => {
                     let data = doc.data();
-                    data.id = isNaN(doc.id) ? doc.id : parseInt(doc.id);
+                    // تأمين الـ ID ليعمل بشكل سليم دائماً
+                    data.id = data.id ? data.id : doc.id; 
                     products.push(data);
+                    
+                    // إضافة القسم للقائمة الذكية
+                    if(data.category) { categoriesSet.add(data.category); }
                 });
+                
                 console.log("تم تحميل " + products.length + " منتجات بنجاح ✨");
-                renderProducts(); // تحديث الواجهة بعد وصول البيانات
+                
+                updateCategoryButtons(Array.from(categoriesSet)); // 🌟 بناء أزرار الأقسام ديناميكياً
+                renderProducts(); 
+                
             } catch (e) {
                 console.error("خطأ في جلب البيانات: ", e);
                 document.getElementById('products-grid').innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 50px;">عذراً، جاري تحديث المنتجات.. يرجى المحاولة بعد قليل.</p>';
             }
+        }
+
+        // 🌟 دالة جديدة: تبني أزرار الأقسام العلوية بناءً على المنتجات المتوفرة فقط!
+        function updateCategoryButtons(categories) {
+            const firstBtn = document.querySelector('.filter-btn');
+            if(!firstBtn) return;
+            const container = firstBtn.parentElement;
+            
+            let html = `<button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="filterProducts('all', this)">الكل</button>`;
+            categories.forEach(cat => {
+                html += `<button class="filter-btn ${currentFilter === cat ? 'active' : ''}" onclick="filterProducts('${cat}', this)">${cat}</button>`;
+            });
+            container.innerHTML = html;
         }
 
         let cart = JSON.parse(localStorage.getItem('pure_cart')) || [];
@@ -456,7 +479,7 @@
                     document.getElementById('det-img').src = p.image;
                     document.getElementById('det-category').innerText = p.category;
                     document.getElementById('det-title').innerText = p.name;
-                    document.getElementById('det-desc').innerText = p.desc;
+                    document.getElementById('det-desc').innerText = p.desc || "تفاصيل المنتج غير متوفرة.";
                     
                     let priceHtml = `${p.price} ريال`;
                     if(p.oldPrice) {
@@ -469,11 +492,8 @@
                     if (p.hasOptions) {
                         optContainer.style.display = 'block';
                         optSelect.innerHTML = p.options.map((opt, index) => `<option value="${index}">${opt.name} - ${opt.price} ريال</option>`).join('');
-                        
                         let optPriceHtml = `${p.options[0].price} ريال`;
-                        if(p.options[0].oldPrice) {
-                             optPriceHtml += ` <span class="old-price" style="font-size: 0.6em;">${p.options[0].oldPrice} ريال</span>`;
-                        }
+                        if(p.options[0].oldPrice) { optPriceHtml += ` <span class="old-price" style="font-size: 0.6em;">${p.options[0].oldPrice} ريال</span>`; }
                         document.getElementById('det-price').innerHTML = optPriceHtml;
                     } else {
                         optContainer.style.display = 'none';
@@ -490,9 +510,7 @@
                 const selectedIndex = document.getElementById('det-options').value;
                 const opt = currentProduct.options[selectedIndex];
                 let priceHtml = opt.price + " ريال";
-                if(opt.oldPrice) {
-                    priceHtml += ` <span class="old-price" style="font-size: 0.6em;">${opt.oldPrice} ريال</span>`;
-                }
+                if(opt.oldPrice) { priceHtml += ` <span class="old-price" style="font-size: 0.6em;">${opt.oldPrice} ريال</span>`; }
                 document.getElementById('det-price').innerHTML = priceHtml;
             }
         }
@@ -506,14 +524,12 @@
     
             if(isDark) { 
                 document.body.setAttribute('data-theme', 'dark'); 
-                icon.className = "fas fa-sun"; 
-                icon.style.color = "var(--accent)";
+                icon.className = "fas fa-sun"; icon.style.color = "var(--accent)";
                 if(logo) logo.src = "82433dark.png"; 
             }
             else { 
                 document.body.removeAttribute('data-theme'); 
-                icon.className = "fas fa-moon"; 
-                icon.style.color = ""; 
+                icon.className = "fas fa-moon"; icon.style.color = ""; 
                 if(logo) logo.src = "82433.png";
             }
         }
@@ -538,21 +554,21 @@
 
             final.forEach(p => {
                 let btnText = p.hasOptions ? "اختيار الباقة" : "أضف للسلة";
-                let btnAction = p.hasOptions ? `openOptionsModal(${p.id})` : `addToCart(${p.id})`;
+                
+                // 🌟 إصلاح جذري: إضافة علامات تنصيص حول الـ ID لتجنب الأخطاء البرمجية
+                let btnAction = p.hasOptions ? `openOptionsModal('${p.id}')` : `addToCart('${p.id}')`;
 
                 let priceHtml = `${p.price} ريال`;
-                if(p.oldPrice) {
-                    priceHtml += ` <span class="old-price">${p.oldPrice} ريال</span>`;
-                }
+                if(p.oldPrice) { priceHtml += ` <span class="old-price">${p.oldPrice} ريال</span>`; }
 
                 grid.innerHTML += `
                     <div class="product-card">
-                        <div class="product-img-wrap" onclick="navigateTo('product', ${p.id})">
+                        <div class="product-img-wrap" onclick="navigateTo('product', '${p.id}')">
                             <span class="category-tag">${p.category}</span>
                             <img src="${p.image}">
                         </div>
                         <div class="product-info">
-                            <div class="product-title" onclick="navigateTo('product', ${p.id})">${p.name}</div>
+                            <div class="product-title" onclick="navigateTo('product', '${p.id}')">${p.name}</div>
                             <div class="product-price">${priceHtml}</div>
                             <button class="btn-add" onclick="${btnAction}"><i class="fas fa-cart-plus"></i> ${btnText}</button>
                         </div>
@@ -563,7 +579,8 @@
         function filterProducts(cat, btn) {
             currentFilter = cat;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active'); renderProducts();
+            if(btn) btn.classList.add('active'); 
+            renderProducts();
         }
 
         function searchProducts() {
@@ -679,36 +696,27 @@
 
             try {
                 showToast("جاري تسجيل طلبك... ⏳");
-
-                // 🌟 توليد رقم طلب رقمي عشوائي مكون من 5 أرقام (مثال: 48291)
                 const numericOrderNumber = Math.floor(10000 + Math.random() * 90000);
 
-                // 1. تجهيز بيانات الطلب لقاعدة البيانات
                 const orderData = {
-                    orderNumber: numericOrderNumber, // أضفنا الرقم هنا
+                    orderNumber: numericOrderNumber,
                     items: cart,
                     total: document.getElementById('cart-total-price').innerText,
                     status: "جديد",
                     createdAt: window.serverTimestamp() 
                 };
 
-                // 2. حفظ الطلب في Firebase
                 await window.addDoc(window.collection(window.db, "orders"), orderData);
 
-                // 3. تجهيز رسالة الواتساب (بدون إيموجي لتفادي الأخطاء)
                 let msg = "أهلاً متجر بيور، طلب جديد:\n";
                 msg += "رقم الطلب: #" + numericOrderNumber + "\n\n";
                 msg += "الخدمات المطلوبة:\n";
-                cart.forEach(i => {
-                    msg += "- " + i.name + " (الكمية: " + i.quantity + ")\n";
-                });
+                cart.forEach(i => { msg += "- " + i.name + " (الكمية: " + i.quantity + ")\n"; });
                 msg += "\nالإجمالي: " + orderData.total + "\n\n";
                 msg += "الرجاء تزويدي بطرق الدفع للبدء.";
 
-                // 4. فتح الواتساب
                 window.open(`https://wa.me/966548774184?text=${encodeURIComponent(msg)}`, '_blank');
                 
-                // 5. تنظيف السلة
                 cart = [];
                 localStorage.removeItem('pure_cart');
                 updateCartUI();
@@ -719,7 +727,7 @@
                 alert("حدث خطأ بسيط. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.");
             }
         }
-        // الكود المحدث لطلب البيانات عند فتح الصفحة
+
         window.onload = () => { 
             applyTheme(); 
             updateCartUI(); 
