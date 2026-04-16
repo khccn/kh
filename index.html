@@ -680,8 +680,12 @@
             try {
                 showToast("جاري تسجيل طلبك... ⏳");
 
+                // 🌟 توليد رقم طلب رقمي عشوائي مكون من 5 أرقام (مثال: 48291)
+                const numericOrderNumber = Math.floor(10000 + Math.random() * 90000);
+
                 // 1. تجهيز بيانات الطلب لقاعدة البيانات
                 const orderData = {
+                    orderNumber: numericOrderNumber, // أضفنا الرقم هنا
                     items: cart,
                     total: document.getElementById('cart-total-price').innerText,
                     status: "جديد",
@@ -689,12 +693,11 @@
                 };
 
                 // 2. حفظ الطلب في Firebase
-                const docRef = await window.addDoc(window.collection(window.db, "orders"), orderData);
-                const orderId = docRef.id.substring(0, 5).toUpperCase(); 
+                await window.addDoc(window.collection(window.db, "orders"), orderData);
 
                 // 3. تجهيز رسالة الواتساب (بدون إيموجي لتفادي الأخطاء)
                 let msg = "أهلاً متجر بيور، طلب جديد:\n";
-                msg += "رقم الطلب: #" + orderId + "\n\n";
+                msg += "رقم الطلب: #" + numericOrderNumber + "\n\n";
                 msg += "الخدمات المطلوبة:\n";
                 cart.forEach(i => {
                     msg += "- " + i.name + " (الكمية: " + i.quantity + ")\n";
