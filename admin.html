@@ -14,28 +14,28 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; text-align: right; border-bottom: 1px solid #eee; }
         th { background: var(--primary); color: white; }
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-edit { background: #0984e3; color: white; }
-        .btn-delete { background: #d63031; color: white; margin-right: 5px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit; }
+        .btn-edit { background: var(--primary); color: white; }
+        .btn-edit:hover { opacity: 0.9; }
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .login-box { text-align: center; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 200px; margin-bottom: 10px; }
+        .login-box { text-align: center; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 1px solid #ddd; border-radius: 5px; width: 250px; font-family: inherit; }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
     <div class="login-box">
-        <h2>🔒 دخول الإدارة</h2>
+        <h2 style="color: var(--primary);">🔒 الدخول الآمن للإدارة</h2>
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني">
         <input type="password" id="admin-pass" placeholder="كلمة المرور">
-        <br>
-        <button class="btn btn-edit" onclick="checkPass()">دخول</button>
+        <button class="btn btn-edit" style="padding: 12px; font-size: 1.1em;" onclick="checkPass()">تسجيل الدخول</button>
     </div>
 </div>
 
 <div class="container">
     <h1><i class="fas fa-user-shield"></i> لوحة تحكم بيور ديزاين</h1>
-
+    
     <div class="card">
         <h3><i class="fas fa-shopping-bag"></i> الطلبات الواردة</h3>
         <div id="orders-list">جاري تحميل الطلبات...</div>
@@ -47,7 +47,7 @@
             <thead>
                 <tr>
                     <th>المنتج</th>
-                    <th>السعر</th>
+                    <th>السعر الحالي</th>
                     <th>العمليات</th>
                 </tr>
             </thead>
@@ -58,8 +58,10 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+    // إعداداتك
     const firebaseConfig = {
         apiKey: "AIzaSyArRTcygI2dadObLCWPSVxOfC3gkBjyHHo",
         authDomain: "pure-design-de0f7.firebaseapp.com",
@@ -71,55 +73,72 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    // التحقق من كلمة المرور (مؤقتاً 1234)
-    window.checkPass = function() {
+    // دالة تسجيل الدخول
+    window.checkPass = async function() {
+        const email = document.getElementById('admin-email').value;
         const pass = document.getElementById('admin-pass').value;
-        if(pass === "1234") {
+        const btn = document.querySelector('.login-box button');
+        btn.innerText = "جاري التحقق...";
+        
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
             document.getElementById('login-overlay').style.display = 'none';
-            loadData();
-        } else {
-            alert("كلمة مرور خاطئة!");
+            loadData(); // تحميل البيانات بعد نجاح الدخول
+        } catch (error) {
+            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
+            btn.innerText = "تسجيل الدخول";
         }
     }
 
+    // دالة سحب البيانات
     async function loadData() {
-        // تحميل الطلبات
-        const ordersSnap = await getDocs(collection(db, "orders"));
-        let ordersHtml = "<table><tr><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th></tr>";
-        ordersSnap.forEach(doc => {
-            const data = doc.data();
-            ordersHtml += `<tr><td>${data.createdAt?.toDate().toLocaleString() || 'غير معروف'}</td><td>${data.total}</td><td>${data.status}</td></tr>`;
-        });
-        document.getElementById('orders-list').innerHTML = ordersHtml + "</table>";
+        try {
+            // سحب الطلبات (الأحدث أولاً)
+            const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+            const ordersSnap = await getDocs(q);
+            let ordersHtml = "<table><tr><th>تاريخ الطلب</th><th>الإجمالي</th><th>رقم الطلب</th></tr>";
+            
+            if(ordersSnap.empty) { ordersHtml = "<p style='color:#666;'>لا توجد طلبات حتى الآن.</p>"; }
+            
+            ordersSnap.forEach(doc => {
+                const data = doc.data();
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
+                const shortId = doc.id.substring(0, 5).toUpperCase();
+                ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td>#${shortId}</td></tr>`;
+            });
+            document.getElementById('orders-list').innerHTML = ordersHtml + (ordersSnap.empty ? "" : "</table>");
 
-        // تحميل المنتجات
-        const productsSnap = await getDocs(collection(db, "products"));
-        const tbody = document.getElementById('products-body');
-        tbody.innerHTML = "";
-        productsSnap.forEach(productDoc => {
-            const p = productDoc.data();
-            tbody.innerHTML += `
-                <tr>
-                    <td>${p.name}</td>
-                    <td><input type="number" value="${p.price}" id="price-${productDoc.id}" style="width:60px"> ريال</td>
-                    <td>
-                        <button class="btn btn-edit" onclick="updatePrice('${productDoc.id}')">تحديث</button>
-                    </td>
-                </tr>`;
-        });
+            // سحب المنتجات
+            const productsSnap = await getDocs(collection(db, "products"));
+            const tbody = document.getElementById('products-body');
+            tbody.innerHTML = "";
+            productsSnap.forEach(productDoc => {
+                const p = productDoc.data();
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${p.name}</strong></td>
+                        <td><input type="number" value="${p.price}" id="price-${productDoc.id}" style="width:70px; text-align:center;"> ريال</td>
+                        <td><button class="btn btn-edit" onclick="updatePrice('${productDoc.id}')"><i class="fas fa-save"></i> حفظ السعر</button></td>
+                    </tr>`;
+            });
+        } catch(e) {
+            console.error(e);
+            alert("حدث خطأ في جلب البيانات.");
+        }
     }
 
+    // دالة تحديث السعر
     window.updatePrice = async function(id) {
         const newPrice = document.getElementById(`price-${id}`).value;
         try {
             await updateDoc(doc(db, "products", id), { price: Number(newPrice) });
-            alert("تم تحديث السعر بنجاح! ✨");
+            alert("تم تحديث السعر بنجاح! سينعكس في المتجر فوراً ✨");
         } catch(e) {
-            alert("فشل التحديث، تأكد من صلاحيات Rules");
+            alert("فشل التحديث، تأكد أنك تملك صلاحية التعديل.");
         }
     }
 </script>
-
 </body>
 </html>
