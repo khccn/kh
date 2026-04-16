@@ -65,9 +65,11 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* الصفحة الرئيسية */
-        .hero { background: url('header.jpg') center/cover; color: #ffffff; text-align: center; padding: 80px 20px; margin: -20px -7% 30px; }
-        .hero h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 900; }
-        .hero p { font-size: 1.2rem; margin-bottom: 25px; opacity: 0.9; }
+        .hero { background: url('header.jpg') center/cover; var(--primary); text-align: center; padding: 80px 20px; margin: -20px -7% 30px; }
+        /* هذا سيجعل عنوان "لمسات رقمية" باللون البني الغامق */
+        .hero h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 900; color: var(--primary); }
+        /* هذا سيجعل النص الصغير تحته بلون رمادي غامق ليقرأ بوضوح */
+        .hero p { font-size: 1.2rem; margin-bottom: 25px; opacity: 0.9; color: var(--text-dark); }
         
         .features { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 30px 5%; background-color: var(--surface); border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); margin-bottom: 40px; }
         .feature-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: bold; }
