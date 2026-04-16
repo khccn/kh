@@ -420,51 +420,26 @@
     </script>
 
     <script>
-        // قاعدة البيانات المحدثة بالخدمات الجديدة 
-        const products = [
-            { 
-                id: 5, 
-                name: "إنشاء متجر إلكتروني", 
-                category: "متاجر", 
-                price: 250,
-                oldPrice: 350, 
-                image: "Market.jpg", 
-                desc: "خدمة متكاملة لإنشاء وتصميم متجرك الإلكتروني بأحدث التقنيات لتبدأ تجارتك فوراً.",
-                hasOptions: true,
-                options: [
-                    { id: "opt1", name: "متجر إلكتروني مع التصميم والإنشاء", price: 250, oldPrice: 350 },
-                    { id: "opt2", name: "متجر إلكتروني مع التصميم والإنشاء - احترافي", price: 400, oldPrice: 500 }
-                ]
-            },
-            { 
-                id: 6, 
-                name: "كتابة وتنسيق سيرة ذاتية (CV)", 
-                category: "خدمات", 
-                price: 25,
-                oldPrice: 40, 
-                image: "cv.png", 
-                desc: "تصميم وكتابة سيرة ذاتية احترافية تتوافق مع أنظمة الفرز الآلي (ATS) لزيادة فرص قبولك الوظيفي.",
-                hasOptions: true,
-                options: [
-                    { id: "opt1", name: "لغة واحدة (عربي أو إنجليزي)", price: 25, oldPrice: 40 },
-                    { id: "opt2", name: "لغتين (عربي وإنجليزي)", price: 35, oldPrice: 50 }
-                ]
-            },
-            { 
-                id: 7, 
-                name: "تصميم فلتر سناب شات", 
-                category: "خدمات", 
-                price: 50,
-                oldPrice: 80, 
-                image: "Snap.png", 
-                desc: "تصميم فلتر سناب شات حصري لمناسبتك السعيدة، بتصميم احترافي يضيف لمسة سحرية لتوثيق ذكرياتكم.",
-                hasOptions: false
-            },
-            { id: 1, name: "لعبة تخمين جنس الجنين", category: "ألعاب", price: 50, oldPrice: 75, image: "Game.jpg", desc: "لعبة رقمية تفاعلية ممتعة لمشاركة العائلة والأصدقاء لحظة الكشف عن جنس الجنين." },
-            { id: 2, name: "دعوة زواج إلكترونية", category: "دعوات", price: 25, oldPrice: 40, image: "Wedding.jpg", desc: "دعوة زواج رقمية بتصميم فاخر ومتحرك، جاهزة للمشاركة عبر الواتساب." },
-            { id: 3, name: "بطاقة معايدة فاخرة", category: "بطاقات", price: 15, oldPrice: 25, image: "Eid.jpg", desc: "بطاقة معايدة بتصميم حصري مع إمكانية كتابة رسالتك الخاصة بأسلوب أنيق." },
-            { id: 4, name: "بشارة مولود", category: "بشارات", price: 20, oldPrice: 35, image: "Born.jpg", desc: "بشارة قدوم مولود جديد بتصميم ملائكي ناعم يخلد هذه اللحظة السعيدة." }
-        ];
+        // --- الربط مع قاعدة البيانات ---
+        let products = []; // سنبدأ بقائمة فارغة ونملأها من جوجل
+
+        async function fetchProductsFromFirebase() {
+            console.log("جاري جلب المنتجات من جوجل...");
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, "products"));
+                products = [];
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    data.id = isNaN(doc.id) ? doc.id : parseInt(doc.id);
+                    products.push(data);
+                });
+                console.log("تم تحميل " + products.length + " منتجات بنجاح ✨");
+                renderProducts(); // تحديث الواجهة بعد وصول البيانات
+            } catch (e) {
+                console.error("خطأ في جلب البيانات: ", e);
+                document.getElementById('products-grid').innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 50px;">عذراً، جاري تحديث المنتجات.. يرجى المحاولة بعد قليل.</p>';
+            }
+        }
 
         let cart = JSON.parse(localStorage.getItem('pure_cart')) || [];
         let currentFilter = 'all';
@@ -477,7 +452,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (pageId === 'product' && productId !== null) {
-                const p = products.find(x => x.id === productId);
+                const p = products.find(x => x.id == productId);
                 if(p) {
                     currentProduct = p;
                     document.getElementById('det-img').src = p.image;
@@ -529,19 +504,19 @@
         function applyTheme() {
             let isDark = localStorage.getItem('theme') === 'dark';
             const icon = document.getElementById('theme-icon');
-            const logo = document.getElementById('main-logo'); // الإمساك بالشعار
+            const logo = document.getElementById('main-logo');
     
             if(isDark) { 
                 document.body.setAttribute('data-theme', 'dark'); 
                 icon.className = "fas fa-sun"; 
                 icon.style.color = "var(--accent)";
-                if(logo) logo.src = "82433dark.png"; // الشعار الليلي الذي رفعته
+                if(logo) logo.src = "82433dark.png"; 
             }
             else { 
                 document.body.removeAttribute('data-theme'); 
                 icon.className = "fas fa-moon"; 
                 icon.style.color = ""; 
-                if(logo) logo.src = "82433.png"; // الشعار النهاري الأصلي
+                if(logo) logo.src = "82433.png";
             }
         }
 
@@ -553,8 +528,16 @@
 
         function renderProducts(list = null) {
             const grid = document.getElementById('products-grid');
+            if(!grid) return;
             grid.innerHTML = '';
+            
             let final = list || (currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter));
+            
+            if (final.length === 0 && products.length > 0) {
+                grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 50px;">لا توجد منتجات في هذا القسم حالياً.</p>';
+                return;
+            }
+
             final.forEach(p => {
                 let btnText = p.hasOptions ? "اختيار الباقة" : "أضف للسلة";
                 let btnAction = p.hasOptions ? `openOptionsModal(${p.id})` : `addToCart(${p.id})`;
@@ -591,7 +574,7 @@
         }
 
         function openOptionsModal(pid) {
-            const p = products.find(x => x.id === pid);
+            const p = products.find(x => x.id == pid);
             if(!p || !p.hasOptions) return;
             currentModalProductId = pid;
             document.getElementById('modal-product-name').innerText = p.name;
@@ -608,7 +591,7 @@
 
         function addOptionToCartFromModal() {
             if(!currentModalProductId) return;
-            const p = products.find(x => x.id === currentModalProductId);
+            const p = products.find(x => x.id == currentModalProductId);
             const selectedIndex = document.getElementById('modal-options-select').value;
             const opt = p.options[selectedIndex];
 
@@ -627,10 +610,10 @@
         }
 
         function addToCart(pid) {
-            const p = products.find(x => x.id === pid);
+            const p = products.find(x => x.id == pid);
             if (p.hasOptions) { navigateTo('product', pid); return; }
 
-            const ex = cart.find(x => x.id === pid);
+            const ex = cart.find(x => x.id == pid);
             if(ex) ex.quantity++; else cart.push({...p, quantity: 1});
             localStorage.setItem('pure_cart', JSON.stringify(cart));
             updateCartUI(); showToast("تمت الإضافة ✨");
@@ -703,10 +686,12 @@
             window.open(`https://wa.me/966548774184?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        window.onload = () => { applyTheme(); renderProducts(); updateCartUI(); };
-        </script>
-
+        // الكود المحدث لطلب البيانات عند فتح الصفحة
+        window.onload = () => { 
+            applyTheme(); 
+            updateCartUI(); 
+            setTimeout(fetchProductsFromFirebase, 1000); 
+        };
+    </script>
 </body>
 </html>
-}
-مافهمت، وش اللي انسخه واستبدله بـ ايش ؟ بالملف اللي ارسلته لك هنا ؟
