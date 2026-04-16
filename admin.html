@@ -3,62 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - بيور ديزاين</title>
+    <title>غرفة العمليات - بيور ديزاين</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; }
+        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: var(--primary); }
-        .card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #eee; }
-        th { background: var(--primary); color: white; }
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: inherit; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid rgba(142, 115, 91, 0.1); }
+        h3 { margin-top: 0; border-bottom: 2px solid var(--bg); padding-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        
+        /* تنسيق الجدول */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; color: var(--primary); font-weight: 600; }
+        
+        /* تنسيق النماذج */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; }
+        
+        /* الأزرار */
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; font-family: inherit; }
+        .btn-add { background: var(--success); color: white; width: 100%; justify-content: center; font-size: 16px; }
         .btn-edit { background: var(--primary); color: white; }
-        .btn-edit:hover { opacity: 0.9; }
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .login-box { text-align: center; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px; }
-        input { padding: 12px; border: 1px solid #ddd; border-radius: 5px; width: 250px; font-family: inherit; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-new { background: #fff3cd; color: #856404; }
+        .status-done { background: #d4edda; color: #155724; }
+
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; width: 320px; }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
     <div class="login-box">
-        <h2 style="color: var(--primary);">🔒 الدخول الآمن للإدارة</h2>
-        <input type="email" id="admin-email" placeholder="البريد الإلكتروني">
-        <input type="password" id="admin-pass" placeholder="كلمة المرور">
-        <button class="btn btn-edit" style="padding: 12px; font-size: 1.1em;" onclick="checkPass()">تسجيل الدخول</button>
+        <h2 style="color:var(--primary)">🔒 دخول الإدارة</h2>
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" style="width:100%; box-sizing:border-box; margin-bottom:15px;">
+        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; box-sizing:border-box; margin-bottom:20px;">
+        <button class="btn btn-edit" onclick="checkPass()" style="width:100%; justify-content:center;">دخول</button>
     </div>
 </div>
 
 <div class="container">
-    <h1><i class="fas fa-user-shield"></i> لوحة تحكم بيور ديزاين</h1>
-    
-    <div class="card">
-        <h3><i class="fas fa-shopping-bag"></i> الطلبات الواردة</h3>
-        <div id="orders-list">جاري تحميل الطلبات...</div>
+    <div class="header">
+        <h1><i class="fas fa-tools"></i> لوحة التحكم الذكية</h1>
+        <p>مرحباً بك في مركز إدارة متجر بيور ديزاين</p>
     </div>
 
     <div class="card">
-        <h3><i class="fas fa-box"></i> إدارة المنتجات</h3>
+        <h3><i class="fas fa-plus-circle"></i> إضافة خدمة/منتج جديد</h3>
+        <div class="form-grid">
+            <input type="text" id="new-p-name" placeholder="اسم المنتج (مثلاً: تصميم شعار)">
+            <input type="number" id="new-p-price" placeholder="السعر (ريال)">
+            <select id="new-p-cat">
+                <option value="خدمات">خدمات رقمية</option>
+                <option value="متاجر">متاجر إلكترونية</option>
+                <option value="دعوات">دعوات</option>
+                <option value="ألعاب">ألعاب</option>
+                <option value="بشارات">بشارات</option>
+            </select>
+            <input type="text" id="new-p-img" placeholder="اسم الصورة (مثلاً: logo.png)">
+        </div>
+        <button class="btn btn-add" onclick="addNewProduct()"><i class="fas fa-cloud-upload-alt"></i> إدراج المنتج في المتجر فوراً</button>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-list-ul"></i> قائمة المنتجات الحالية</h3>
         <table id="products-table">
             <thead>
                 <tr>
                     <th>المنتج</th>
-                    <th>السعر الحالي</th>
+                    <th>السعر (ريال)</th>
                     <th>العمليات</th>
                 </tr>
             </thead>
             <tbody id="products-body"></tbody>
         </table>
     </div>
+
+    <div class="card">
+        <h3><i class="fas fa-shopping-cart"></i> سجل الطلبات الحديثة</h3>
+        <div id="orders-list"></div>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -77,83 +109,92 @@
     window.checkPass = async function() {
         const email = document.getElementById('admin-email').value;
         const pass = document.getElementById('admin-pass').value;
-        const btn = document.querySelector('.login-box button');
-        btn.innerText = "جاري التحقق...";
-        
         try {
             await signInWithEmailAndPassword(auth, email, pass);
             document.getElementById('login-overlay').style.display = 'none';
             loadData();
-        } catch (error) {
-            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
-            btn.innerText = "تسجيل الدخول";
-        }
+        } catch (e) { alert("خطأ في بيانات الدخول!"); }
     }
 
     async function loadData() {
+        // تحميل المنتجات
+        const pSnap = await getDocs(collection(db, "products"));
+        const pBody = document.getElementById('products-body');
+        pBody.innerHTML = "";
+        pSnap.forEach(d => {
+            const p = d.data();
+            pBody.innerHTML += `<tr>
+                <td>${p.name}</td>
+                <td><input type="number" id="pr-${d.id}" value="${p.price}" style="width:70px"></td>
+                <td>
+                    <button class="btn btn-edit" onclick="updatePrice('${d.id}')">حفظ</button>
+                    <button class="btn" style="background:#eee" onclick="deleteProduct('${d.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        });
+
+        // تحميل الطلبات
+        const oSnap = await getDocs(collection(db, "orders"));
+        let ordersArray = [];
+        oSnap.forEach(d => ordersArray.push({id: d.id, ...d.data()}));
+        ordersArray.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+
+        let html = "<table><tr><th>التاريخ</th><th>الطلب</th><th>الإجمالي</th><th>الحالة</th></tr>";
+        ordersArray.forEach(o => {
+            const date = o.createdAt ? o.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
+            const statusClass = o.status === 'مكتمل' ? 'status-done' : 'status-new';
+            html += `<tr>
+                <td>${date}</td>
+                <td>#${o.orderNumber || o.id.substring(0,5)}</td>
+                <td style="font-weight:bold">${o.total}</td>
+                <td>
+                    <span class="status-badge ${statusClass}">${o.status || 'جديد'}</span>
+                    <button onclick="markAsDone('${o.id}')" style="border:none; cursor:pointer; background:none; color:var(--success)"><i class="fas fa-check-circle"></i></button>
+                </td>
+            </tr>`;
+        });
+        document.getElementById('orders-list').innerHTML = html + "</table>";
+    }
+
+    // 🌟 دالة إضافة منتج جديد
+    window.addNewProduct = async function() {
+        const name = document.getElementById('new-p-name').value;
+        const price = document.getElementById('new-p-price').value;
+        const cat = document.getElementById('new-p-cat').value;
+        const img = document.getElementById('new-p-img').value;
+
+        if(!name || !price || !img) return alert("يرجى ملء كافة البيانات!");
+
         try {
-            // سحب المنتجات
-            const productsSnap = await getDocs(collection(db, "products"));
-            const tbody = document.getElementById('products-body');
-            tbody.innerHTML = "";
-            productsSnap.forEach(productDoc => {
-                const p = productDoc.data();
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${p.name}</strong></td>
-                        <td><input type="number" value="${p.price}" id="price-${productDoc.id}" style="width:70px; text-align:center;"> ريال</td>
-                        <td><button class="btn btn-edit" onclick="updatePrice('${productDoc.id}')"><i class="fas fa-save"></i> حفظ السعر</button></td>
-                    </tr>`;
+            await addDoc(collection(db, "products"), {
+                id: Date.now(), // رقم فريد
+                name: name,
+                price: Number(price),
+                category: cat,
+                image: img,
+                desc: "وصف المنتج الجديد يضاف من لوحة التحكم",
+                hasOptions: false
             });
-
-            // سحب الطلبات
-            const ordersSnap = await getDocs(collection(db, "orders"));
-            let ordersArray = [];
-            ordersSnap.forEach(doc => ordersArray.push({ id: doc.id, ...doc.data() }));
-
-            ordersArray.sort((a, b) => {
-                const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
-                const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
-                return timeB - timeA;
-            });
-
-            let ordersHtml = "<table><tr><th>تاريخ الطلب</th><th>الإجمالي</th><th>رقم الطلب</th></tr>";
-            
-            if(ordersArray.length === 0) { 
-                ordersHtml = "<p style='color:#666; text-align:center;'>لا توجد طلبات حتى الآن.</p>"; 
-            } else {
-                ordersArray.forEach(data => {
-                    const date = data.createdAt ? data.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
-                    
-                    // 🌟 قراءة الرقم الجديد، وإذا كان طلباً قديماً يعرض الحروف لكي لا يختفي
-                    const orderNum = data.orderNumber ? data.orderNumber : data.id.substring(0, 5).toUpperCase();
-                    
-                    ordersHtml += `<tr><td>${date}</td><td style="color:var(--primary); font-weight:bold;">${data.total}</td><td style="font-family: monospace; font-size: 1.1em;">#${orderNum}</td></tr>`;
-                });
-                ordersHtml += "</table>";
-            }
-            document.getElementById('orders-list').innerHTML = ordersHtml;
-
-        } catch(e) {
-            console.error(e);
-            alert("حدث خطأ بسيط في جلب البيانات، يرجى تحديث الصفحة.");
-        }
+            alert("🎉 تم إضافة المنتج بنجاح وسيظهر لزبائنك الآن!");
+            location.reload();
+        } catch(e) { alert("حدث خطأ أثناء الإضافة!"); }
     }
 
     window.updatePrice = async function(id) {
-        const newPrice = document.getElementById(`price-${id}`).value;
-        const btn = event.currentTarget;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> جاري...";
-        
-        try {
-            await updateDoc(doc(db, "products", id), { price: Number(newPrice) });
-            btn.innerHTML = "<i class='fas fa-check'></i> تم!";
-            btn.style.background = "#27ae60";
-            setTimeout(() => { btn.innerHTML = originalText; btn.style.background = "var(--primary)"; }, 2000);
-        } catch(e) {
-            alert("فشل التحديث، تأكد أنك تملك صلاحية التعديل.");
-            btn.innerHTML = originalText;
+        const np = document.getElementById('pr-'+id).value;
+        await updateDoc(doc(db, "products", id), { price: Number(np) });
+        alert("تم التحديث!");
+    }
+
+    window.markAsDone = async function(id) {
+        await updateDoc(doc(db, "orders", id), { status: "مكتمل" });
+        loadData();
+    }
+
+    window.deleteProduct = async function(id) {
+        if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
+            await deleteDoc(doc(db, "products", id));
+            loadData();
         }
     }
 </script>
