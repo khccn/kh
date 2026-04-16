@@ -6,29 +6,36 @@
     <title>غرفة العمليات - بيور ديزاين</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; }
+        :root { --primary: #8e735b; --bg: #f8f5f2; --text: #2d3436; --white: #ffffff; --success: #27ae60; --danger: #d63031; --warning: #f39c12; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 30px; }
+        .container { max-width: 1100px; margin: 0 auto; display: none; }
+        
+        /* تنسيق الهيدر مع الشعار */
+        .header { text-align: center; margin-bottom: 30px; position: relative; }
+        .admin-logo { width: 120px; margin-bottom: 10px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+        .logout-btn { position: absolute; left: 0; top: 10px; background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
         .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid rgba(142, 115, 91, 0.1); }
         h3 { margin-top: 0; border-bottom: 2px solid var(--bg); padding-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         
-        /* تنسيق الجدول */
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
         th { background: #fafafa; color: var(--primary); font-weight: 600; }
         
-        /* تنسيق النماذج */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; }
+        input, select, textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; width: 100%; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 80px; grid-column: 1 / -1; }
         
-        /* الأزرار */
         .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; font-family: inherit; }
-        .btn-add { background: var(--success); color: white; width: 100%; justify-content: center; font-size: 16px; }
+        .btn-add { background: var(--success); color: white; justify-content: center; font-size: 16px; grid-column: 1 / -1; }
         .btn-edit { background: var(--primary); color: white; }
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block;}
         .status-new { background: #fff3cd; color: #856404; }
         .status-done { background: #d4edda; color: #155724; }
+
+        .action-btns { display: flex; gap: 10px; align-items: center; }
+        .btn-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 14px; transition: 0.2s; }
 
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 2000; }
         .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; width: 320px; }
@@ -38,43 +45,49 @@
 
 <div id="login-overlay">
     <div class="login-box">
+        <img src="82433.png" alt="Pure Design" style="width: 100px; margin-bottom: 20px;">
         <h2 style="color:var(--primary)">🔒 دخول الإدارة</h2>
-        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" style="width:100%; box-sizing:border-box; margin-bottom:15px;">
-        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; box-sizing:border-box; margin-bottom:20px;">
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" style="margin-bottom:15px;">
+        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="margin-bottom:20px;" onkeypress="handleEnter(event)">
         <button class="btn btn-edit" onclick="checkPass()" style="width:100%; justify-content:center;">دخول</button>
     </div>
 </div>
 
-<div class="container">
+<div class="container" id="main-content">
     <div class="header">
-        <h1><i class="fas fa-tools"></i> لوحة التحكم الذكية</h1>
-        <p>مرحباً بك في مركز إدارة متجر بيور ديزاين</p>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        <img src="82433.png" alt="Logo" class="admin-logo">
+        <h1>لوحة التحكم</h1>
+        <p>إدارة متجر بيور ديزاين</p>
     </div>
 
     <div class="card">
         <h3><i class="fas fa-plus-circle"></i> إضافة خدمة/منتج جديد</h3>
         <div class="form-grid">
-            <input type="text" id="new-p-name" placeholder="اسم المنتج (مثلاً: تصميم شعار)">
-            <input type="number" id="new-p-price" placeholder="السعر (ريال)">
-            <select id="new-p-cat">
-                <option value="خدمات">خدمات رقمية</option>
-                <option value="متاجر">متاجر إلكترونية</option>
-                <option value="دعوات">دعوات</option>
-                <option value="ألعاب">ألعاب</option>
-                <option value="بشارات">بشارات</option>
-            </select>
-            <input type="text" id="new-p-img" placeholder="اسم الصورة (مثلاً: logo.png)">
+            <input type="text" id="new-p-name" placeholder="اسم المنتج">
+            <input type="number" id="new-p-price" placeholder="السعر">
+            <input list="categories-list" id="new-p-cat" placeholder="القسم">
+            <datalist id="categories-list">
+                <option value="خدمات رقمية">
+                <option value="متاجر إلكترونية">
+                <option value="دعوات">
+                <option value="ألعاب">
+                <option value="بشارات">
+            </datalist>
+            <input type="text" id="new-p-img" placeholder="اسم الصورة (مثلاً: Born.jpg)">
+            <textarea id="new-p-desc" placeholder="وصف المنتج التفصيلي"></textarea>
+            <button class="btn btn-add" onclick="addNewProduct()"><i class="fas fa-cloud-upload-alt"></i> إدراج في المتجر</button>
         </div>
-        <button class="btn btn-add" onclick="addNewProduct()"><i class="fas fa-cloud-upload-alt"></i> إدراج المنتج في المتجر فوراً</button>
     </div>
 
     <div class="card">
-        <h3><i class="fas fa-list-ul"></i> قائمة المنتجات الحالية</h3>
+        <h3><i class="fas fa-list-ul"></i> إدارة المنتجات</h3>
         <table id="products-table">
             <thead>
                 <tr>
                     <th>المنتج</th>
-                    <th>السعر (ريال)</th>
+                    <th>القسم</th>
+                    <th>السعر</th>
                     <th>العمليات</th>
                 </tr>
             </thead>
@@ -83,15 +96,15 @@
     </div>
 
     <div class="card">
-        <h3><i class="fas fa-shopping-cart"></i> سجل الطلبات الحديثة</h3>
+        <h3><i class="fas fa-history"></i> سجل الطلبات الحديثة</h3>
         <div id="orders-list"></div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyArRTcygI2dadObLCWPSVxOfC3gkBjyHHo",
@@ -106,96 +119,103 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    window.handleEnter = function(e) { if (e.key === 'Enter') checkPass(); }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            loadData();
+        } else {
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'none';
+        }
+    });
+
     window.checkPass = async function() {
         const email = document.getElementById('admin-email').value;
         const pass = document.getElementById('admin-pass').value;
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            document.getElementById('login-overlay').style.display = 'none';
-            loadData();
-        } catch (e) { alert("خطأ في بيانات الدخول!"); }
+        try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert("بيانات الدخول غير صحيحة!"); }
     }
 
+    window.logout = function() { signOut(auth).then(() => alert("خرجت بنجاح")); }
+
     async function loadData() {
-        // تحميل المنتجات
+        // المنتجات
         const pSnap = await getDocs(collection(db, "products"));
         const pBody = document.getElementById('products-body');
         pBody.innerHTML = "";
         pSnap.forEach(d => {
             const p = d.data();
             pBody.innerHTML += `<tr>
-                <td>${p.name}</td>
-                <td><input type="number" id="pr-${d.id}" value="${p.price}" style="width:70px"></td>
-                <td>
-                    <button class="btn btn-edit" onclick="updatePrice('${d.id}')">حفظ</button>
-                    <button class="btn" style="background:#eee" onclick="deleteProduct('${d.id}')"><i class="fas fa-trash"></i></button>
+                <td><strong>${p.name}</strong></td>
+                <td><span class="status-badge" style="background:#eee;">${p.category}</span></td>
+                <td><input type="number" id="pr-${d.id}" value="${p.price}" style="width:70px; text-align:center;"></td>
+                <td class="action-btns">
+                    <button class="btn-circle btn-edit" title="حفظ السعر" onclick="updatePrice('${d.id}')"><i class="fas fa-save"></i></button>
+                    <button class="btn-circle" style="background:var(--danger); color:white" title="حذف" onclick="deleteProduct('${d.id}')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>`;
         });
 
-        // تحميل الطلبات
+        // الطلبات
         const oSnap = await getDocs(collection(db, "orders"));
         let ordersArray = [];
         oSnap.forEach(d => ordersArray.push({id: d.id, ...d.data()}));
         ordersArray.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
 
-        let html = "<table><tr><th>التاريخ</th><th>الطلب</th><th>الإجمالي</th><th>الحالة</th></tr>";
+        let html = "<table><tr><th>التاريخ</th><th>رقم الطلب</th><th>الإجمالي</th><th>الحالة والتحكم</th></tr>";
         ordersArray.forEach(o => {
             const date = o.createdAt ? o.createdAt.toDate().toLocaleString('ar-SA') : 'جديد';
             const statusClass = o.status === 'مكتمل' ? 'status-done' : 'status-new';
+            const orderNum = o.orderNumber || o.id.substring(0,5);
+            
             html += `<tr>
                 <td>${date}</td>
-                <td>#${o.orderNumber || o.id.substring(0,5)}</td>
-                <td style="font-weight:bold">${o.total}</td>
-                <td>
+                <td style="font-weight:bold;">#${orderNum}</td>
+                <td style="color:var(--primary); font-weight:bold;">${o.total}</td>
+                <td class="action-btns">
                     <span class="status-badge ${statusClass}">${o.status || 'جديد'}</span>
-                    <button onclick="markAsDone('${o.id}')" style="border:none; cursor:pointer; background:none; color:var(--success)"><i class="fas fa-check-circle"></i></button>
+                    <button class="btn-circle" style="background:var(--success); color:white" title="تم التنفيذ" onclick="updateStatus('${o.id}', 'مكتمل')"><i class="fas fa-check"></i></button>
+                    <button class="btn-circle" style="background:var(--warning); color:white" title="تراجع (إعادة لجديد)" onclick="updateStatus('${o.id}', 'جديد')"><i class="fas fa-times"></i></button>
                 </td>
             </tr>`;
         });
         document.getElementById('orders-list').innerHTML = html + "</table>";
     }
 
-    // 🌟 دالة إضافة منتج جديد
     window.addNewProduct = async function() {
         const name = document.getElementById('new-p-name').value;
         const price = document.getElementById('new-p-price').value;
         const cat = document.getElementById('new-p-cat').value;
         const img = document.getElementById('new-p-img').value;
+        const desc = document.getElementById('new-p-desc').value;
 
-        if(!name || !price || !img) return alert("يرجى ملء كافة البيانات!");
+        if(!name || !price || !img || !cat) return alert("يرجى تعبئة الخانات الأساسية!");
 
         try {
             await addDoc(collection(db, "products"), {
-                id: Date.now(), // رقم فريد
-                name: name,
-                price: Number(price),
-                category: cat,
-                image: img,
-                desc: "وصف المنتج الجديد يضاف من لوحة التحكم",
-                hasOptions: false
+                id: Math.floor(10000 + Math.random() * 90000),
+                name, price: Number(price), category: cat, image: img, desc: desc || "لا يوجد وصف.", hasOptions: false
             });
-            alert("🎉 تم إضافة المنتج بنجاح وسيظهر لزبائنك الآن!");
-            location.reload();
-        } catch(e) { alert("حدث خطأ أثناء الإضافة!"); }
+            alert("تمت الإضافة بنجاح!");
+            loadData();
+        } catch(e) { alert("حدث خطأ!"); }
     }
 
     window.updatePrice = async function(id) {
         const np = document.getElementById('pr-'+id).value;
         await updateDoc(doc(db, "products", id), { price: Number(np) });
-        alert("تم التحديث!");
+        alert("تم تحديث السعر!");
     }
 
-    window.markAsDone = async function(id) {
-        await updateDoc(doc(db, "orders", id), { status: "مكتمل" });
+    window.updateStatus = async function(id, newStatus) {
+        await updateDoc(doc(db, "orders", id), { status: newStatus });
         loadData();
     }
 
     window.deleteProduct = async function(id) {
-        if(confirm("هل أنت متأكد من حذف هذا المنتج نهائياً؟")) {
-            await deleteDoc(doc(db, "products", id));
-            loadData();
-        }
+        if(confirm("حذف نهائي؟")) { await deleteDoc(doc(db, "products", id)); loadData(); }
     }
 </script>
 </body>
