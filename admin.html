@@ -244,20 +244,42 @@
 
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
+    // 🌟 إضافة منتج مع حماية صارمة جداً
     window.addNewProduct = async () => {
-        const oldP = document.getElementById('new-p-old-price').value;
+        // استخدام trim() لمسح أي مسافات فارغة كتبها المستخدم بالغلط
+        const nameVal = document.getElementById('new-p-name').value.trim();
+        const priceVal = document.getElementById('new-p-price').value;
+        const oldPVal = document.getElementById('new-p-old-price').value;
+        const catVal = document.getElementById('new-p-cat').value.trim();
+        const imgVal = document.getElementById('new-p-img').value.trim();
+        const descVal = document.getElementById('new-p-desc').value.trim();
+
+        // 🌟 جدار الحماية: التحقق من كل خانة قبل الإرسال
+        if(!nameVal || nameVal === "") return alert("⚠️ خطأ: يجب كتابة اسم المنتج!");
+        if(!priceVal || Number(priceVal) <= 0) return alert("⚠️ خطأ: يجب كتابة سعر صحيح أكبر من الصفر!");
+        if(!catVal) return alert("⚠️ خطأ: يجب اختيار أو كتابة قسم!");
+        if(!imgVal) return alert("⚠️ خطأ: يجب كتابة اسم الصورة!");
+
         const data = {
             id: Math.floor(10000 + Math.random() * 90000),
-            name: document.getElementById('new-p-name').value,
-            price: Number(document.getElementById('new-p-price').value),
-            category: document.getElementById('new-p-cat').value,
-            image: document.getElementById('new-p-img').value,
-            desc: document.getElementById('new-p-desc').value,
-            isHidden: false, hasOptions: false
+            name: nameVal,
+            price: Number(priceVal),
+            category: catVal,
+            image: imgVal,
+            desc: descVal || "لا يوجد وصف.",
+            isHidden: false, 
+            hasOptions: false
         };
-        if(oldP) data.oldPrice = Number(oldP);
+        
+        // إضافة السعر القديم فقط إذا كان رقماً صحيحاً
+        if(oldPVal && Number(oldPVal) > 0) data.oldPrice = Number(oldPVal);
+
         await addDoc(collection(db, "products"), data);
-        alert("تمت الإضافة!"); loadData();
+        
+        // تفريغ الخانات بعد النجاح
+        ['new-p-name', 'new-p-price', 'new-p-old-price', 'new-p-cat', 'new-p-img', 'new-p-desc'].forEach(id => document.getElementById(id).value = '');
+        alert("🎉 تمت الإضافة بنجاح!"); 
+        loadData();
     };
 
     window.toggleHide = async (id, current) => { await updateDoc(doc(db, "products", id), {isHidden: !current}); loadData(); };
