@@ -182,6 +182,9 @@
             .actions-group { flex-direction: column; } .cart-drawer { width: 100%; left: -100%; }
             .vision-mission { grid-template-columns: 1fr; }
         }
+        /* نافذة إتمام الطلب (بيانات العميل) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(5px); }
+        .modal-box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -691,15 +694,41 @@
             setTimeout(() => t.remove(), 3000); 
         }
 
+        // 🌟 فتح نافذة البيانات بدلاً من الإرسال المباشر
         async function checkout() {
             if (cart.length === 0) { showToast("السلة فارغة!"); return; }
+            document.getElementById('checkout-modal-overlay').style.display = 'flex';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal-overlay').style.display = 'none';
+        }
+
+        // 🌟 معالجة الطلب بعد إدخال البيانات
+        async function processCheckout() {
+            const custName = document.getElementById('cust-name').value.trim();
+            const custPhone = document.getElementById('cust-phone').value.trim();
+
+            if(!custName || !custPhone) {
+                alert("يرجى إدخال الاسم ورقم الجوال لتأكيد الطلب 🌹");
+                return;
+            }
 
             try {
                 showToast("جاري تسجيل طلبك... ⏳");
                 const numericOrderNumber = Math.floor(10000 + Math.random() * 90000);
 
+                // حفظ بيانات العميل في قاعدة بيانات مستقلة للتسويق لاحقاً
+                await window.addDoc(window.collection(window.db, "customers"), {
+                    name: custName,
+                    phone: custPhone,
+                    joinedAt: window.serverTimestamp()
+                });
+
                 const orderData = {
                     orderNumber: numericOrderNumber,
+                    customerName: custName,
+                    customerPhone: custPhone,
                     items: cart,
                     total: document.getElementById('cart-total-price').innerText,
                     status: "جديد",
@@ -709,7 +738,8 @@
                 await window.addDoc(window.collection(window.db, "orders"), orderData);
 
                 let msg = "أهلاً متجر بيور، طلب جديد:\n";
-                msg += "رقم الطلب: #" + numericOrderNumber + "\n\n";
+                msg += "رقم الطلب: #" + numericOrderNumber + "\n";
+                msg += "الاسم: " + custName + "\n\n";
                 msg += "الخدمات المطلوبة:\n";
                 cart.forEach(i => { msg += "- " + i.name + " (الكمية: " + i.quantity + ")\n"; });
                 msg += "\nالإجمالي: " + orderData.total + "\n\n";
@@ -721,10 +751,11 @@
                 localStorage.removeItem('pure_cart');
                 updateCartUI();
                 toggleCart();
+                closeCheckoutModal();
 
             } catch (e) {
                 console.error("خطأ في الطلب: ", e);
-                alert("حدث خطأ بسيط. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.");
+                alert("حدث خطأ بسيط. يرجى المحاولة مرة أخرى.");
             }
         }
 
@@ -734,5 +765,17 @@
             setTimeout(fetchProductsFromFirebase, 1000); 
         };
     </script>
+    <div id="checkout-modal-overlay" class="modal-overlay">
+        <div class="modal-box" style="width: 350px; max-width: 90%; text-align: center;">
+            <h3 style="color:var(--primary); margin-bottom: 10px;"><i class="fas fa-user-check"></i> بيانات التواصل</h3>
+            <p style="font-size: 14px; margin-bottom: 20px; color: #666;">أدخل بياناتك لتأكيد الطلب ولنتواصل معك.</p>
+            
+            <input type="text" id="cust-name" placeholder="الاسم الكريم" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px; font-family:inherit;">
+            <input type="tel" id="cust-phone" placeholder="رقم الجوال (مثال: 05xxxx)" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px; font-family:inherit; text-align:left;" dir="ltr">
+            
+            <button onclick="processCheckout()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:10px; font-family:inherit;">تأكيد والذهاب للواتساب</button>
+            <button onclick="closeCheckoutModal()" style="width:100%; padding:12px; background:#eee; color:#333; border:none; border-radius:8px; cursor:pointer; font-family:inherit;">إلغاء</button>
+        </div>
+    </div>
 </body>
 </html>
